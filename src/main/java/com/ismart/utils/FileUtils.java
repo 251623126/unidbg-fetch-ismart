@@ -1,26 +1,23 @@
-package com.px.unidbg.utils;
+package com.ismart.utils;
 
-import java.io.*;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
 public class FileUtils {
-    public static File loadFile(String path) throws IOException {
-        InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("demo_resources/"+path);
-        if (inputStream == null) {
-            throw new FileNotFoundException("Could not find resource in classpath: " + path);
-        }
+    public static Path loadFile(String path) throws IOException {
+        try (InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(path)) {
+            if (inputStream == null) {
+                throw new FileNotFoundException("Could not find resource in classpath: " + path);
+            }
 
-        Path tempFilePath = Files.createTempFile("temp_file_prefix_", "_temp_file_suffix_");
-        try {
+            Path tempFilePath = Files.createTempFile("temp_file_prefix_", "_temp_file_suffix_");
             Files.copy(inputStream, tempFilePath, StandardCopyOption.REPLACE_EXISTING);
-        } finally {
-            inputStream.close();
-        }
 
-        return tempFilePath.toFile();
+            return tempFilePath;
+        }
     }
 }

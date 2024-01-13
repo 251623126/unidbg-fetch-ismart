@@ -1,5 +1,5 @@
 package com.ismart.service;
 
-public interface IsmartService {
+public interface ISmartService {
     String enc(String str,int i);
 }
